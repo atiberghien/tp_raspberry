@@ -70,11 +70,19 @@ def exo5():
 
 def exo6():
     #Relever la température ambiante
+    GPIO.setup(8, GPIO.OUT)
     while True:
-        print read_temp()
+        temp = read_temp()
+        print temp
+        if temp > 22:
+            GPIO.output(8, GPIO.HIGH)
+        else:
+            GPIO.output(8, GPIO.LOW)
+        time.sleep(1)
 
 def exo7(my_flower_name):
-
+    GPIO.setup(8, GPIO.OUT)
+    
     auth = tweepy.OAuthHandler("LGR9nWvXLNZbi7fHbyXojUCky", "tkkwd6CRSFFQY0cKT3S5qm4HoVCJReIa1EUXvamrwCk1OXCjxv")
     auth.set_access_token("777822224296411136-PqlOUsqej0K1vRsI6zt2WbkVc5Qo3JS", "xx5KUdBDVP2cHpT33W4ys9HQRZcvg1RYeZUn8HXCdGlut")
     api = tweepy.API(auth)
@@ -82,7 +90,7 @@ def exo7(my_flower_name):
     last_mention_id = None
 
     while True:
-
+        GPIO.output(8, GPIO.LOW)
         most_recent_mention = api.mentions_timeline(count=1)[0]
 
         if last_mention_id == None:
@@ -91,10 +99,13 @@ def exo7(my_flower_name):
             supervisor, flower_name, action, hour = most_recent_mention.text.split(" ")
             if my_flower_name in flower_name:
                 if action == "#temperature":
+                    print "TWEET"
                     api.update_status(status="@%s %s %sC %s" %(most_recent_mention.user.screen_name,
                                                                flower_name, read_temp(),
                                                                time.strftime('%d/%m/%Y %Hh%M')))
-
+                elif action == "#arrosage":
+                    print "GLOUGLOU"
+                    GPIO.output(8, GPIO.HIGH)
             last_mention_id = most_recent_mention.id
 
         time.sleep(10)
@@ -107,3 +118,4 @@ def exo7(my_flower_name):
 # exo5()
 # exo6()
 exo7("jean")
+
