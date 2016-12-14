@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # coding: utf-8
 
-from utils import *
-
 import RPi.GPIO as GPIO
 import time
 import tweepy
+import utils
+import os
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
